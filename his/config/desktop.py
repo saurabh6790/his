@@ -6,7 +6,7 @@ def get_data():
 	return [
 		{
 			"module_name": "Hospital Information System",
-			"color": "white",
+			"color": "#bf0808",
 			"icon": "octicon octicon-plus",
 			"type": "module",
 			"label": _("Hospital Information System")

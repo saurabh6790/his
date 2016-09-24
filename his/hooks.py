@@ -70,13 +70,15 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Customer": {
+		"autoname": "his.hospital_information_system.doctype.patient_registration.patient_registration.set_customer_name"
+	},
+	"Sales Invoice": {
+		"on_submit": "his.hospital_information_system.doctype.case_study.case_study.update_status",
+		"on_cancel": "his.hospital_information_system.doctype.case_study.case_study.update_status"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
@@ -111,3 +113,5 @@ app_license = "MIT"
 # 	"frappe.desk.doctype.event.event.get_events": "his.event.get_events"
 # }
 
+
+fixtures = ["Role"]
