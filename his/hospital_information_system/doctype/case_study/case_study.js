@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Case Study', {
 	refresh: function(frm) {
-		if(frm.doc.docstatus == 1){
+		if(frm.doc.docstatus == 1 && frm.doc.status != 'Billed'){
 			frm.add_custom_button("Make Bill", function(){
 				frm.trigger("make_invoice")
 			})

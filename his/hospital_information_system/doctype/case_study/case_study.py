@@ -18,10 +18,11 @@ class CaseStudy(Document):
 		self.db_set("status", status)
 
 def update_status(doc, method):
-	if doc.case_study:
-		status = 'Billed' if doc.docstatus == 1 else 'Submitted'
-		case_study_doc = frappe.get_doc("Case Study", doc.case_study)
-		case_study_doc.set_status(status)
+	for data in doc.items:
+		if data.case_study:
+			status = 'Billed' if doc.docstatus == 1 else 'Submitted'
+			case_study_doc = frappe.get_doc("Case Study", data.case_study)
+			case_study_doc.set_status(status)
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None):
@@ -53,6 +54,7 @@ def make_sales_invoice(source_name, target_doc=None):
 			"field_map": {
 				"test": "item_code",
 				"test_name": "item_name",
+				"parent": "case_study"
 			},
 		}
 	}, target_doc, postprocess)
