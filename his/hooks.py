@@ -114,4 +114,4 @@ doc_events = {
 # }
 
 
-fixtures = ["Role"]
+fixtures = ["Role", "Custom Field"]

@@ -11,7 +11,8 @@ from frappe import _
 class PatientRegistration(Document):
 	def validate(self):
 		self.create_customer()
-	
+		self.create_user()
+
 	def create_customer(self):
 		if not frappe.db.exists("Customer", self.name):
 			customer = frappe.get_doc({
@@ -26,6 +27,19 @@ class PatientRegistration(Document):
 			customer.flags.patient_name = self.name
 			customer.flags.ignore_madatory=True
 			customer.insert(ignore_permissions=True)
+	
+	def create_user(self):
+		user_email = self.email if self.email else "{0}.{1}".format(self.mobile, frappe.db.get_value("HIS Settings", None, "default_domain"))
+		if not frappe.db.exists("User", user_email):
+			user = frappe.get_doc({
+				"doctype": "User",
+				"email": user_email,
+				"first_name": self.patient_name
+			})
+
+			user.flags.ignore_madatory=True
+			user.insert(ignore_permissions=True)
+			
 
 def set_customer_name(doc, method):
 	if doc.flags.patient_name:
