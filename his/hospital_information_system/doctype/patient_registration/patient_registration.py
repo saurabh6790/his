@@ -14,6 +14,7 @@ class PatientRegistration(Document):
 		self.create_user()
 
 	def create_customer(self):
+		customer_group = get_customer_group()
 		if not frappe.db.exists("Customer", self.name):
 			customer = frappe.get_doc({
 				"doctype": "Customer",
@@ -29,7 +30,7 @@ class PatientRegistration(Document):
 			customer.insert(ignore_permissions=True)
 	
 	def create_user(self):
-		user_email = self.email if self.email else "{0}.{1}".format(self.mobile, frappe.db.get_value("HIS Settings", None, "default_domain"))
+		user_email = self.email if self.email else "{0}@{1}".format(self.mobile, frappe.db.get_value("HIS Settings", None, "default_domain"))
 		if not frappe.db.exists("User", user_email):
 			user = frappe.get_doc({
 				"doctype": "User",
@@ -44,7 +45,17 @@ class PatientRegistration(Document):
 def set_customer_name(doc, method):
 	if doc.flags.patient_name:
 		doc.name = doc.flags.patient_name
-		
+
+def get_customer_group():
+	customer_group = 'Patient'
+	if not frappe.db.exists('Customer Group', customer_group):
+		doc = frappe.new_doc('Customer Group')
+		doc.parent_customer_group = 'All Customer Groups'
+		doc.customer_group_name = customer_group
+		doc.save(ignore_permissions=True)
+
+	return customer_group
+
 @frappe.whitelist()
 def make_advance_payment_entry(party, amount):
 	company = frappe.db.get_value("Global Defaults", None, "default_company")
